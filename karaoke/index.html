@@ -14,7 +14,32 @@
 <div id="lyrics"></div>
 
 <script>
-	// Complete this section and create a CSS file named style.css
-</script>
+
+var v = document.getElementById("music_video");
+var lyrics = document.getElementById("lyrics");
+v.addEventListener("timeupdate", function(){
+if (v.currentTime <36) {
+lyrics
+.innerHTML = "TEST2";
+}
+else if (v.currentTime>= 36 && v.currentTime < 54|| v.currentTime>= 84 && v.currentTime < 120||v.currentTime >= 128  ) {
+
+document.getElementById("lyrics")
+.innerHTML = "TEST3";
+}
+	else if (v.currentTime >= 54 && v.currentTime < 84) {
+document.getElementById("lyrics")
+.innerHTML = "TEST4";
+	}
+	else if (v.currentTime >= 120 && v.currentTime < 128 ) {
+document.getElementById("lyrics")
+.innerHTML = "TEST5";
+} }, false )
+
+
+
+
+	
+	</script>
 </body>
-</html>	
+</html>
