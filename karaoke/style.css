@@ -1,2 +1,29 @@
-.lyrics {
+#lyrics {
+width: 230px;
+
+  	margin-left: 42%;
+    margin-right: auto;
+    text-align: center;
+    	font-family: Comic Sans, Comic Sans MS, cursive;
+}
+
+body {
+	background: url("background.jpg") no-repeat center center fixed;
+	-webkit-background-size: cover;
+	 -moz-background-size: cover;
+	 -o-background-size: cover;
+	 background-size: cover;
+}
+
+video {
+
+	margin-top: 5%;
+  	margin-left: 37%;
+    margin-right: auto;
+}
+
+#title {
+	text-align: center;
+	font-family: Comic Sans, Comic Sans MS, cursive;
+	font-weight: bold;
 }
