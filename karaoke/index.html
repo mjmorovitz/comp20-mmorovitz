@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Daydream Believer</title>
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+<h1 id="title">Daydream Believer</h1>
+
+<video src="daydream_believer.webm" id="music_video" controls></video>
+<div id="lyrics"></div>
+
+<script>
+
+var v = document.getElementById("music_video");
+var lyrics = document.getElementById("lyrics");
+v.addEventListener("timeupdate", function(){
+if (v.currentTime <6 || v.currentTime >= 160  ) {
+lyrics
+.innerHTML = "<img src='monkees.jpg'></img>";
+}
+else if (v.currentTime >=5 && v.currentTime <36  ) {
+lyrics
+.innerHTML = "Oh, I could hide 'neath the wings Of the bluebird as she sings.The six o'clock alarm would never ring. But it rings and I rise, Wipe the sleep out of my eyes. My shavin' razor's cold and it stings.";
+}
+else if (v.currentTime>= 36 && v.currentTime < 54|| v.currentTime>= 84 && v.currentTime < 120||v.currentTime >= 128 ) {
+lyrics
+.innerHTML = "Cheer up, Sleepy Jean. Oh, what can it mean. To a daydream believer And a homecoming queen.";
+}
+	else if (v.currentTime >= 54 && v.currentTime < 84) {
+lyrics
+.innerHTML = "You once thought of me As a white knight on a steed. Now you know how happy I can be. Oh, and our good times start and end Without dollar one to spend. But how much, baby, do we really need.";
+	}
+	else if (v.currentTime >= 120 && v.currentTime < 128 ) {
+lyrics
+.innerHTML = "<img src='musicnotes.png'></img>";
+} }, false )
+
+
+
+
+	
+	</script>
+</body>
+</html>
