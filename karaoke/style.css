@@ -1,2 +1,46 @@
-.lyrics {
+Skip to content
+ This repository
+Explore
+Gist
+Blog
+Help
+Maretta Morovitz mjmorovitz
+ 
+2  Unwatch 
+  Star 0
+ Fork 0tuftsdev/comp20-mmorovitz PRIVATE
+ branch: master  comp20-mmorovitz / karaoke / style.css
+Maretta Morovitzmjmorovitz an hour ago updated style.css with font, background, and element positioning
+1 contributor
+30 lines (24 sloc)  0.522 kb RawBlameHistory   
+#lyrics {
+width: 230px;
+
+  	margin-left: 42%;
+    margin-right: auto;
+    text-align: center;
+    	font-family: Comic Sans, Comic Sans MS, cursive;
 }
+
+body {
+	background: url("background.jpg") no-repeat center center fixed;
+	-webkit-background-size: cover;
+	 -moz-background-size: cover;
+	 -o-background-size: cover;
+	 background-size: cover;
+}
+
+video {
+
+	margin-top: 5%;
+  	margin-left: 37%;
+    margin-right: auto;
+}
+
+#title {
+	text-align: center;
+	font-family: Comic Sans, Comic Sans MS, cursive;
+	font-weight: bold;
+}
+Status API Training Shop Blog About
+© 2014 GitHub, Inc. Terms Privacy Security Contact
