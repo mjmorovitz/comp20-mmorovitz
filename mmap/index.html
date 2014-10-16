@@ -15,7 +15,7 @@
 			var request = new XMLHttpRequest();
 			var me = new google.maps.LatLng(Lat, Long);
 			var myOptions = {
-						zoom: 20, // The larger the zoom number, the bigger the zoom
+						zoom: 25, // The larger the zoom number, the bigger the zoom
 						center: me,
 						mapTypeId: google.maps.MapTypeId.ROADMAP
 					};
@@ -67,41 +67,57 @@
 		
 
 			
-// Create instance of XHR object
-		xhr = new XMLHttpRequest();
-		xhr.open("post", "http://chickenofthesea.herokuapp.com/sendLocation", true);
-		xhr.send("login=StewieGriffin&lat=Lat&lng=Long");
-		
-		// Set up handler for the response
-		xhr.onreadystatechange = function() {
+// Create instance of XHR object	
+		xml = new XMLHttpRequest();
+		xml.open("post", "http://chickenofthesea.herokuapp.com/sendLocation", true);
+		xml.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	
-			if (xhr.readyState == 4 && xhr.status == 200) {
+var parameters = "login=StewieGriffin&lat=43&lng=71";
+		
+		xml.send(parameters);
+
+
+		// Set up handler for the response
+		xml.onreadystatechange = function() {
+		var attrValue_lat;
+		var attrValue_long;
+			if (xml.readyState == 4 && xml.status == 200) {
 				alert("Got data back!");
-				data = xhr.responseText;
-				data_parsed = JSON.parse(data);
-				console.log(data_parsed);
-					
-			}
-		};
-				
-				
-			}
 			
+				data = JSON.parse(xml.responseText);
+
+				for (var i = 0; i < data.length; i++) {
+					attrValue_lat = data["characters"][0]["loc"]["latitude"];
+					attrValue_long = data["characters"][0]["loc"]["longitude"];
+					createMarker(attrValue_lat, attrValue_long);
+
+
+				};
+				
+						
+			}
+		}
+	
+	}
 			
-			function createMarker(place)
+			function createMarker(data_lat, data_long)
 			{
-				var placeLoc = place.geometry.location;
-				var marker = new google.maps.Marker({
+
+				
+				console.log("IN");
+				place = new google.maps.LatLng(data_lat, data_long);
+				marker = new google.maps.Marker({
 					map: map,
-					position: place.geometry.location,
-					
+					position: place
+						
 				});
 
-				google.maps.event.addListener(marker, 'click', function() {
+				marker.setMap(map);
+				/*google.maps.event.addListener(marker, 'click', function() {
 					infowindow.close();
 					infowindow.setContent(place.name);
 					infowindow.open(map, this);
-				});
+				});*/
       }
 
 
@@ -114,10 +130,7 @@
 			{
 				if (status == google.maps.places.PlacesServiceStatus.OK) {
 					alert("Got places back!");
-					places = results;
-					for (var i = 0; i < results.length; i++) {
-						createMarker(results[i]);
-					}
+					
 				}
 			}
 			
