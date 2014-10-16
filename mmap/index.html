@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+
+<html>
+
+	<head><meta charset="utf-8" />
+		<title>Mauraders Map</title>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=true&amp;libraries=places"></script>
+		<link rel="stylesheet" href="map_style.css" />
+		
+		<script>
+			Lat = 0;
+			Long = 0;
+
+			var request = new XMLHttpRequest();
+			var me = new google.maps.LatLng(Lat, Long);
+			var myOptions = {
+						zoom: 20, // The larger the zoom number, the bigger the zoom
+						center: me,
+						mapTypeId: google.maps.MapTypeId.ROADMAP
+					};
+			var map;
+			var marker;
+			var infowindow = new google.maps.InfoWindow();
+			var places;
+			
+			function init()
+			{
+				map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+				getMyLocation();
+			}
+			
+			function getMyLocation()
+			{
+				if (navigator.geolocation) { // the navigator.geolocation object is supported on your browser
+					navigator.geolocation.getCurrentPosition(function(position) {
+						Lat = position.coords.latitude;
+						Long = position.coords.longitude;
+	
+						renderMap();
+					}); 	
+				} 	
+				else {
+					alert("Geolocation is not supported by your web browser.");
+				}
+			}
+
+			function renderMap()
+			{
+				me = new google.maps.LatLng(Lat, Long);
+				
+				map.panTo(me);
+	
+				var image = 'stewie.jpg';
+				marker = new google.maps.Marker({
+					position: me,
+					title: "Here I Am!",
+					icon: image
+				});
+				marker.setMap(map);
+					
+				google.maps.event.addListener(marker, 'click', function() {
+					infowindow.setContent(marker.title);
+					infowindow.open(map, marker);
+				});
+	
+		
+
+			
+// Create instance of XHR object
+		xhr = new XMLHttpRequest();
+		xhr.open("post", "http://chickenofthesea.herokuapp.com/sendLocation", true);
+		xhr.send("login=StewieGriffin&lat=Lat&lng=Long");
+		
+		// Set up handler for the response
+		xhr.onreadystatechange = function() {
+	
+			if (xhr.readyState == 4 && xhr.status == 200) {
+				alert("Got data back!");
+				data = xhr.responseText;
+				data_parsed = JSON.parse(data);
+				console.log(data_parsed);
+					
+			}
+		};
+				
+				
+			}
+			
+			
+			function createMarker(place)
+			{
+				var placeLoc = place.geometry.location;
+				var marker = new google.maps.Marker({
+					map: map,
+					position: place.geometry.location,
+					
+				});
+
+				google.maps.event.addListener(marker, 'click', function() {
+					infowindow.close();
+					infowindow.setContent(place.name);
+					infowindow.open(map, this);
+				});
+      }
+
+
+	
+	
+			
+			
+			// Taken from http://code.google.com/apis/maps/documentation/javascript/places.html
+			function callback(results, status)
+			{
+				if (status == google.maps.places.PlacesServiceStatus.OK) {
+					alert("Got places back!");
+					places = results;
+					for (var i = 0; i < results.length; i++) {
+						createMarker(results[i]);
+					}
+				}
+			}
+			
+	</script>
+	</head>
+	
+	<body onload="init()">
+		<div id="map_canvas"></div>
+	</body>
+</html>
+
