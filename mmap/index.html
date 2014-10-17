@@ -15,7 +15,7 @@
 			var request = new XMLHttpRequest();
 			var me = new google.maps.LatLng(Lat, Long);
 			var myOptions = {
-						zoom: 25, // The larger the zoom number, the bigger the zoom
+						zoom: 30, // The larger the zoom number, the bigger the zoom
 						center: me,
 						mapTypeId: google.maps.MapTypeId.ROADMAP
 					};
@@ -87,7 +87,7 @@ dis = [-1, -1, -1, -1, -1, -1];
 				alert("Got data back!");
 			
 				data = JSON.parse(xml.responseText);
-				console.log(data);
+				
 				for (var i = 0; i < data['students'].length; i++) {
 					attrValue_lat = data['students'][i]["lat"];
 					attrValue_long = data['students'][i]["lng"];
@@ -143,37 +143,31 @@ char = ["a", "a", "a", "a", "a", "a"];
 var tempchar;
 for (var pos = 0; pos < data['characters'].length; pos++) {
 char[pos] = data['characters'][pos]['name'];
-console.log(char[i] + "ASJKGALKJSDH");
-}
-console.log(char[0] + "ASJKGALKJSDH");
-console.log("FIRST");
-for (var i =1; i < data['characters'].length; i++){
 
-
-	 	if (dis[j] < dis[i]) {
-			temp = dis[i];
-			dis[i] = dis[j];
-			dis[j] = temp;
-			tempchar = data['characters'][i]['name'];
-			char[i] = data['characters'][j]['name'];
-			char[j] = tempchar;
- 	
-			j = i;
-			
-
-
-			
 }
 
-		}
-			
+
+	
 			
 	 
 string_dis = "";
-console.log("SECOND");
-	for (var i = 0; i < data['characters'].length; i++) {	
-		string_dis =string_dis + " " + char[i] + ": " + dis[i] + "<br>";
-	}
+
+var max = 0;
+var count = 0; 
+var indexnum;
+while (count < data['characters'].length) {
+for (var i = 0; i < data['characters'].length; i++) {
+if (dis[i]>max) {
+max = dis[i];
+indexnum = i;
+}
+}
+string_dis =string_dis + " " + char[indexnum] + ": " + dis[indexnum] + " miles" + "<br>";
+dis[indexnum] = 0;
+count++;
+max = 0;
+indexnum = -1;
+
 document.getElementById("distance").innerHTML = string_dis;
 
 
@@ -184,6 +178,7 @@ document.getElementById("distance").innerHTML = string_dis;
 				Number.prototype.toRad = function() {
    return this * Math.PI / 180;
 }
+
 var R = 6371;
 var x1 = lat - Lat;
 var dLat = x1.toRad();
@@ -191,10 +186,25 @@ var x2 = long - Long;
 var dLon = x2.toRad();
 var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(Lat.toRad())*Math.cos(lat.toRad())*Math.sin(dLon/2)*Math.sin(dLon/2);
 var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-var d = R * c; 
-
+var d = (R * c)* 0.621371;
+makepoly(lat, long);
 return d;
 
+}
+
+function makepoly(lat, long){
+var coords = [
+new google.maps.LatLng(Lat, Long),
+new google.maps.LatLng(lat, long)
+];
+var Path = new google.maps.Polyline({
+    path: coords,
+    geodesic: true,
+    strokeColor: '#FF0000',
+    strokeOpacity: 1.0,
+    strokeWeight: 2
+  });
+Path.setMap(map);
 }
 			function createMarker(data_lat, data_long, string)
 			{		
@@ -246,6 +256,7 @@ return d;
 					
 				}
 			}
+}
 
 
 
