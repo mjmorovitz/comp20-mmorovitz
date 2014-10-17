@@ -73,7 +73,7 @@
 		xml.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	
 		var parameters = "login=StewieGriffin&lat=" + Lat + "&lng=" + Long;
-		console.log(parameters);
+		
 				
 		xml.send(parameters);
 
@@ -86,7 +86,7 @@
 				alert("Got data back!");
 			
 				data = JSON.parse(xml.responseText);
-				console.log(data);
+				
 				for (var i = 0; i < data['students'].length; i++) {
 					attrValue_lat = data['students'][i]["lat"];
 					attrValue_long = data['students'][i]["lng"];
