@@ -80,13 +80,14 @@
 
 		// Set up handler for the response
 		xml.onreadystatechange = function() {
+dis = [-1, -1, -1, -1, -1, -1];
 		var attrValue_lat;
 		var attrValue_long;
 			if (xml.readyState == 4 && xml.status == 200) {
 				alert("Got data back!");
 			
 				data = JSON.parse(xml.responseText);
-				
+				console.log(data);
 				for (var i = 0; i < data['students'].length; i++) {
 					attrValue_lat = data['students'][i]["lat"];
 					attrValue_long = data['students'][i]["lng"];
@@ -103,36 +104,98 @@
 
 
 						addCharacters('carmen.png', data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude'], stringc);
+dis[i] = genDis("carmen",data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude']); 
+			
 					}
 					if (data['characters'][i]['name'] == 'batman') {
  stringc = "Name: "+ data['characters'][i]['name']+ " Latitude : " + data['characters'][i]["loc"]['latitude'] + " Longitude: " + data['characters'][i]["loc"]['longitude'] + " Note: " + data['characters'][i]["loc"]["note"] ;
 						addCharacters('batman.png', data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude'], stringc);
+dis[i] = genDis("batman",data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude']); 
 					}
 
 					if (data['characters'][i]['name'] == 'hescott'){
  stringc = "Name: "+ data['characters'][i]['name']+ " Latitude : " + data['characters'][i]["loc"]['latitude'] + " Longitude: " + data['characters'][i]["loc"]['longitude'] + " Note: " + data['characters'][i]["loc"]["note"] ;
 						addCharacters('hescott.png', data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude'], stringc);
+dis[i] = genDis("hescott",data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude']); 
 					}
 
 					if (data['characters'][i]['name'] == 'waldo'){
  stringc = "Name: "+ data['characters'][i]['name']+ " Latitude : " + data['characters'][i]["loc"]['latitude'] + " Longitude: " + data['characters'][i]["loc"]['longitude'] + " Note: " + data['characters'][i]["loc"]["note"] ;
 						addCharacters('waldo.png', data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude'], stringc);
+dis[i] = genDis("waldo",data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude']); 
 					}
 					if (data['characters'][i]['name'] == 'snape'){
 stringc = "Name: "+ data['characters'][i]['name']+ " Latitude : " + data['characters'][i]["loc"]['latitude'] + " Longitude: " + data['characters'][i]["loc"]['longitude'] + " Note: " + data['characters'][i]["loc"]["note"] ;
 						addCharacters('snape.png', data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude'], stringc);
+dis[i] = genDis("snape",data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude']); 
 					}
 					if (data['characters'][i]['name'] == 'nr'){
  stringc = "Name: "+ data['characters'][i]['name']+ " Latitude : " + data['characters'][i]["loc"]['latitude'] + " Longitude: " + data['characters'][i]["loc"]['longitude'] + " Note: " + data['characters'][i]["loc"]["note"] ;
 						addCharacters('nr.png', data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude'], stringc);
+dis[i] = genDis("nr",data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude']); 
 					}
+
 						
 			}
+var j = 0;
+var temp = 0;
+char = ["a", "a", "a", "a", "a", "a"];
+var tempchar;
+for (var pos = 0; pos < data['characters'].length; pos++) {
+char[pos] = data['characters'][pos]['name'];
+console.log(char[i] + "ASJKGALKJSDH");
+}
+console.log(char[0] + "ASJKGALKJSDH");
+console.log("FIRST");
+for (var i =1; i < data['characters'].length; i++){
+
+
+	 	if (dis[j] < dis[i]) {
+			temp = dis[i];
+			dis[i] = dis[j];
+			dis[j] = temp;
+			tempchar = data['characters'][i]['name'];
+			char[i] = data['characters'][j]['name'];
+			char[j] = tempchar;
+ 	
+			j = i;
+			
+
+
+			
+}
+
+		}
+			
+			
+	 
+string_dis = "";
+console.log("SECOND");
+	for (var i = 0; i < data['characters'].length; i++) {	
+		string_dis =string_dis + " " + char[i] + ": " + dis[i] + "<br>";
+	}
+document.getElementById("distance").innerHTML = string_dis;
+
 
 		}
 	
 	}
-			
+			function genDis(name, lat, long) {
+				Number.prototype.toRad = function() {
+   return this * Math.PI / 180;
+}
+var R = 6371;
+var x1 = lat - Lat;
+var dLat = x1.toRad();
+var x2 = long - Long;
+var dLon = x2.toRad();
+var a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(Lat.toRad())*Math.cos(lat.toRad())*Math.sin(dLon/2)*Math.sin(dLon/2);
+var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+var d = R * c; 
+
+return d;
+
+}
 			function createMarker(data_lat, data_long, string)
 			{		
 				place = new google.maps.LatLng(data_lat, data_long);
@@ -164,7 +227,12 @@ stringc = "Name: "+ data['characters'][i]['name']+ " Latitude : " + data['charac
 					infowindow.setContent(string);
 					infowindow.open(map, this);
 				});
-			
+
+}
+
+
+
+				
 }
 	
 	
@@ -178,13 +246,15 @@ stringc = "Name: "+ data['characters'][i]['name']+ " Latitude : " + data['charac
 					
 				}
 			}
-}
+
+
 
 	</script>
 	</head>
 	
 	<body onload="init()">
 		<div id="map_canvas"></div>
+		<div id="distance">HI</div>	
 	</body>
 </html>
 
