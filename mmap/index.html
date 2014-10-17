@@ -72,8 +72,9 @@
 		xml.open("post", "http://chickenofthesea.herokuapp.com/sendLocation", true);
 		xml.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	
-var parameters = "login=StewieGriffin&lat=43&lng=71";
-		
+		var parameters = "login=StewieGriffin&lat=" + Lat + "&lng=" + Long;
+		console.log(parameters);
+				
 		xml.send(parameters);
 
 
@@ -85,26 +86,55 @@ var parameters = "login=StewieGriffin&lat=43&lng=71";
 				alert("Got data back!");
 			
 				data = JSON.parse(xml.responseText);
-
-				for (var i = 0; i < data.length; i++) {
-					attrValue_lat = data["characters"][0]["loc"]["latitude"];
-					attrValue_long = data["characters"][0]["loc"]["longitude"];
-					createMarker(attrValue_lat, attrValue_long);
-
-
+				console.log(data);
+				for (var i = 0; i < data['students'].length; i++) {
+					attrValue_lat = data['students'][i]["lat"];
+					attrValue_long = data['students'][i]["lng"];
+					string = "Login: "+ data['students'][i]["login"]+ " Timestamp: " + data['students'][i]["created_at"]+  " Latitude : " + data['students'][i]["lat"] + " Longitude: " + data['students'][i]["lng"];
+					createMarker(attrValue_lat, attrValue_long, string);
 				};
 				
+				for (var i = 0; i < data['characters'].length; i++) {
+
+
+					if (data['characters'][i]['name'] == 'carmen') {
+
+ stringc = "Name: "+ data['characters'][i]['name']+ " Latitude : " + data['characters'][i]["loc"]['latitude'] + " Longitude: " + data['characters'][i]["loc"]['longitude'] + " Note: " + data['characters'][i]["loc"]["note"];
+
+
+						addCharacters('carmen.png', data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude'], stringc);
+					}
+					if (data['characters'][i]['name'] == 'batman') {
+ stringc = "Name: "+ data['characters'][i]['name']+ " Latitude : " + data['characters'][i]["loc"]['latitude'] + " Longitude: " + data['characters'][i]["loc"]['longitude'] + " Note: " + data['characters'][i]["loc"]["note"] ;
+						addCharacters('batman.png', data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude'], stringc);
+					}
+
+					if (data['characters'][i]['name'] == 'hescott'){
+ stringc = "Name: "+ data['characters'][i]['name']+ " Latitude : " + data['characters'][i]["loc"]['latitude'] + " Longitude: " + data['characters'][i]["loc"]['longitude'] + " Note: " + data['characters'][i]["loc"]["note"] ;
+						addCharacters('hescott.png', data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude'], stringc);
+					}
+
+					if (data['characters'][i]['name'] == 'waldo'){
+ stringc = "Name: "+ data['characters'][i]['name']+ " Latitude : " + data['characters'][i]["loc"]['latitude'] + " Longitude: " + data['characters'][i]["loc"]['longitude'] + " Note: " + data['characters'][i]["loc"]["note"] ;
+						addCharacters('waldo.png', data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude'], stringc);
+					}
+					if (data['characters'][i]['name'] == 'snape'){
+stringc = "Name: "+ data['characters'][i]['name']+ " Latitude : " + data['characters'][i]["loc"]['latitude'] + " Longitude: " + data['characters'][i]["loc"]['longitude'] + " Note: " + data['characters'][i]["loc"]["note"] ;
+						addCharacters('snape.png', data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude'], stringc);
+					}
+					if (data['characters'][i]['name'] == 'nr'){
+ stringc = "Name: "+ data['characters'][i]['name']+ " Latitude : " + data['characters'][i]["loc"]['latitude'] + " Longitude: " + data['characters'][i]["loc"]['longitude'] + " Note: " + data['characters'][i]["loc"]["note"] ;
+						addCharacters('nr.png', data['characters'][i]["loc"]['latitude'], data['characters'][i]["loc"]['longitude'], stringc);
+					}
 						
 			}
+
 		}
 	
 	}
 			
-			function createMarker(data_lat, data_long)
-			{
-
-				
-				console.log("IN");
+			function createMarker(data_lat, data_long, string)
+			{		
 				place = new google.maps.LatLng(data_lat, data_long);
 				marker = new google.maps.Marker({
 					map: map,
@@ -113,14 +143,29 @@ var parameters = "login=StewieGriffin&lat=43&lng=71";
 				});
 
 				marker.setMap(map);
-				/*google.maps.event.addListener(marker, 'click', function() {
+				google.maps.event.addListener(marker, 'click', function() {
 					infowindow.close();
-					infowindow.setContent(place.name);
+					infowindow.setContent(string);
 					infowindow.open(map, this);
-				});*/
-      }
+				});
+      			}
 
-
+			function addCharacters(image, char_lat, char_long, string)
+			{
+				char = new google.maps.LatLng(char_lat, char_long);
+				marker = new google.maps.Marker({
+					map: map,
+					position: char,
+					icon: image
+				});
+				marker.setMap(map);
+				google.maps.event.addListener(marker, 'click', function() {
+					infowindow.close();
+					infowindow.setContent(string);
+					infowindow.open(map, this);
+				});
+			
+}
 	
 	
 			
@@ -133,7 +178,8 @@ var parameters = "login=StewieGriffin&lat=43&lng=71";
 					
 				}
 			}
-			
+}
+
 	</script>
 	</head>
 	
