@@ -50,18 +50,20 @@
 				me = new google.maps.LatLng(Lat, Long);
 				
 				map.panTo(me);
-	
+	var stewie="Hi, I am Stewie Griffin! Latitude: " + Lat + " Longtitude: " + Long;
 				var image = 'stewie.jpg';
 				marker = new google.maps.Marker({
 					position: me,
-					title: "Here I Am!",
+					title: "Hi, I'm Stewie Griffin!" ,
 					icon: image
+					
 				});
 				marker.setMap(map);
-					
 				google.maps.event.addListener(marker, 'click', function() {
-					infowindow.setContent(marker.title);
-					infowindow.open(map, marker);
+					infowindow.close();
+					infowindow.setContent(stewie);
+					infowindow.open(map, this);	
+				
 				});
 	
 		
