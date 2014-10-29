@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+	<title>My News Feed</title>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script>
+
+
+	current = 1;
+
+	function reload()
+	{
+		elem = $("#news");
+		output = "";
+
+		for (key = current-1; key > 0; key--) {
+
+			output = output + "<p>" + localStorage[key] + "</p>\n";
+		}
+
+	elem.html(output);
+	}
+	
+	function store()
+	{
+		date = Date.now();
+		text = date+ " - " +$("#msg").val();
+		localStorage[current] = text;
+
+		current = current +1;
+		reload();
+	}
+
+	
+	</script>
+</head>
+
+<body >
+	<h1>My News Feed</h1>
+	<h3>My news update: <input id="msg" type="text" onchange="store()" name="msg" size="30" /></h3>
+	<div id="news">News...</div>
+</body>
+</html>
