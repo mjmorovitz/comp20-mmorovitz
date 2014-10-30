@@ -18,17 +18,20 @@
 		var dates = [];
 		temp="";
 		var count = 0;
-		for(i = 0; i < storeddates.length; i++)	{
+		for(i = 9; i < storeddates.length; i++)	{
 			if (storeddates[i] != "."){
 				temp = temp+ storeddates[i];
+				console.log("temp is " + temp);
 			}
 			else{
 				dates.push(temp);
 				temp = "";
 				count = count + 1;
+				
 			}
 	}		
-			for (i = count-1; i > 0; i--){
+			for (i = count-1; i >= 0; i--){
+			console.log("DATES FROM STROAGE" + dates[i]+ " I " + i);
 				output = output + "<p>" + localStorage[dates[i]] + "</p>\n";
 			}
 
@@ -38,8 +41,11 @@
 	function store()
 	{	
 		date = Date.now();
+		console.log(date + " DATE ");
 		text = date+ " - " +$("#msg").val();
+	
 		localStorage[date] = text;
+console.log(date + "LOC STOR");
 		localStorage["string"] = localStorage["string"]+ JSON.stringify(date)+ ".";
 		reload();
 	}
