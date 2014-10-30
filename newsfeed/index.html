@@ -8,28 +8,39 @@
 	<script>
 
 
-	current = 1;
 
 	function reload()
 	{
+
 		elem = $("#news");
 		output = "";
+		var storeddates = localStorage["string"];
+		var dates = [];
+		temp="";
+		var count = 0;
+		for(i = 0; i < storeddates.length; i++)	{
+			if (storeddates[i] != "."){
+				temp = temp+ storeddates[i];
+			}
+			else{
+				dates.push(temp);
+				temp = "";
+				count = count + 1;
+			}
+	}		
+			for (i = count-1; i > 0; i--){
+				output = output + "<p>" + localStorage[dates[i]] + "</p>\n";
+			}
 
-		for (key = current-1; key > 0; key--) {
-
-			output = output + "<p>" + localStorage[key] + "</p>\n";
-		}
-
-	elem.html(output);
+		elem.html(output);
 	}
 	
 	function store()
-	{
+	{	
 		date = Date.now();
 		text = date+ " - " +$("#msg").val();
-		localStorage[current] = text;
-
-		current = current +1;
+		localStorage[date] = text;
+		localStorage["string"] = localStorage["string"]+ JSON.stringify(date)+ ".";
 		reload();
 	}
 
