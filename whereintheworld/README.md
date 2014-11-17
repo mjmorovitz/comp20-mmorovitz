@@ -1,0 +1,4 @@
+README file
+All required parts of this project were correctly implemented. The bonus, to display latitude and longitude as actual location, was not sucessfully implemented. This was due to the excessive amount of time that lapsed between when the server requested the location data and when a response was actually received. Two separate packages were used (geocoder and node-geocoder). Both took equally long periods of time. This long delay happened with only a few entries in the Mongo database. Thus, with more entries this operation would have taken so long to get data back it would have been useless to display any relevant information. This is why most server-side programming avoids perfoming a lot of calculations or other time consuming operations.
+
+The project took aproximatly 6 hours to complete. Help was given by Ming Chow, Connor Taylor, and Andrew Dempsey.
