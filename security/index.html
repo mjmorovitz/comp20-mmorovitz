@@ -1,0 +1,60 @@
+<!DOCTYPE HTML>
+
+<html>
+
+<head>
+<title>Security Assesment</title>
+<script type="text/javascript"></script> 
+</head>
+<body>
+<h1> Security Assesment of Robert Ruenes' Assignments </h1>
+<p>Prepared by <a href="http://mjmorovitz.github.io">Maretta Morovitz</a> &bull; 11/30/2014</p>
+
+<h2>Introduction</h2>
+This assessment tests the security of the <a href="https://limitless-garden-1242.herokuapp.com/"></a> web application developed by Robert Ruenes for the <a href="http://tuftsdev.github.io/WebProgramming/assignments/a4.html">Comp20 assignment 4</a>. According to the specifications of Assignment 3, his application used "Heroku, Node.js with the Express web framework, and MongoDB, to build a web application that maintains "location check-ins" (login, latitude, and longitude) for a long period of time." While all aspects of the assignment were sucessfully implemented, security vulnerabilities exist that make it unsuitable for public use. This report identifies four of those problems and suggest corrections to avoid said vulnerabilities. 
+<h2> Methodology</h2>
+Testing was first attempted using suggestions given by Professor Ming Chow during the Comp 20 course on 11/25/2014. Tools used include curl. The code was then reviewed for additional logic errors or possible sources of vulnerabilities.
+
+<h2>Abstract of Finding</h2>
+Four key vulernabilities were identified including: Cross-Site Scripting, manual data manipulation, overloading heroku storage, and wild-card '*' domain for the Access-Control-Allow-Origin header. Each of these vulnerabilities, discussed below, presents significant sources of problems to the application by either crashing the server and rendering the application inoperable or hosting invalid data thus making the results published invalid and useless. 
+
+<h2>Issues Found </h2>
+<ol> 
+	<li>Cross-Site-Scripting</li>
+<ul>
+	<li>Affects GET functions</li>
+	<li>Severity of Issue: HIGH. This vulnerability put the application at serious risk to attack. Becuase the user input is acceped without ever being processed or reviewed in any way, the user can send malicious input that could cripple the application. For example, in this project, running <code>curl --data  "login=<script>window.location.assign('https://www.youtube.com/watch?v=PIA6MMOKz24')"</script>&lat=10&lng=10" https://limitless-garden-1242.herokuapp.com/sendLocation</code> redirected the home page to a cute youtube video about Munchkin the Shih Tzu teddy bear. As can be clearly seen, this rendered the entire homepage of the application useless. And while this redirect simply showed a harmless teddy bear dog, a more malicious attack could redirect a user to a new site without the user ever realizing they had left the application they trusted. This can have serious consequencies for data security if the user enters any personal information. A second, less obvious but equally devious act is allowed through this vulnerability. The curl script enters two random latitude and longitude coordinates not based on the users actual location. Thus, a user could manipulate their position on the map and change their location to anywhere in the world. This makes the application useless as no data present in the appliaction can be trusted as legitimate.
+	<li> Proof of Vulnerability: Logging onto the application will redirect as seen in this screenshot. <img src= "munchkin.png" height="543" width="843"/> 
+	<li>Resolution: This issue can be fixed by checking all user input before it is allowed to be accepted by the application. In regard to the latitude and longitude coordinates, one suggestion is to match coordinates with the clients IP address and only allow matching numbers. Another solution is that the coordinates could come directly from the user's IP address and remove all possibility for user manipulation. Additionally, to avoid Javascript insertions, filtering data through a whitelist of allowable characters is a good way to validate input. While no list can ever be all inclusive, it can defend against a majority of attacks and is certainly better than no filtering at all as in the current situation.
+</ul>
+<li>Overloading the Heroku storage</li>
+	<ul>
+		<li> Affects GET functions</li>
+		<li> Severity of Issue: Moderate. The mongo add-on for Heroku allocates 1G of storage space on heroku. The following script was able to overload the database and disable the application. <code>for ((i=1;i< 2; i--)); do curl --data "login=maretta&lat=10&lng=10" https://limitless-garden-1242.herokuapp.com/sendLocation; done</code> This vulnerability can bring down the entire app, however, it is an extremely slow process. The <code>curl</code> script ran for over 15+ hours before finally overloading the database. </li>
+ 		<li>Proof of Vulnerability: The following output was given once database reached capacity. (left photo) Trying to access the application yielded the following error. (right photo) <table class="Table">
+<tr><td><img src= "output.png" height="543" width="843"/> </td>
+<td><img src= "crashed.png" height="543" width="843"/> </td></tr>
+</table></li>
+		<li> Resolution: The issue can be resolved by limiting the number of allowable mongo additions per hour. This would prevent excessive spam entries from overloading the database and crashing the application.
+</ul>
+<li> User Queries on Mongo</li>
+	<ul> 
+		<li> Affects /location.json</li>
+		<li>Severity of Issue: HIGH. All Json data was piped to a local file. The page /locations.json was intended to output all documents containing a certain search criteria. However by entering "?login=[$ne]=maretta" as part of the URL instead, all documents not equally the specified login value were displayed. This represents a serious vulnerability to the application as anyone can run queries and manipulate what information is visible to them. 
+<li> Proof of Vulnerability: The following JSON was outputted displaying all logins not equal to "maretta", rather than all logins equal to "maretta". <img src= "notequal.png" height="543" width="843"/> 
+<li> Resolution</li> The mongo query should be built into the server side code rather than trusting the user input. This simple fix could prevent a serious vulnerability to the data security.
+</ul>
+<li>wild-card '*' domain for the Access-Control-Allow-Origin header</li> 
+<ul> 
+	<li> Affects POST /sendLocations & GET redline.json</li>
+	<li>Serverity of Issue: Moderate. Setting the request header to the wildcard value lets sharing with every other origin. While this may seem harmless, in an intranet setting this could lead to data leakage snce any site can send a XHR request to the application and  and access the server response. </li>
+<li> Proof of vulnerability: While analyzing the code, the following section displays this vulnerability clearly: <code>   response.header("Access-Control-Allow-Origin", "*");</code>
+<li>Resolution: Specifiy which clients can make XHR request rather than giving blind permission to any client.</li>
+</ul>
+</ol>
+<h2> Conclusion</h2> There are several significant vulnerabilities that must be addressed to so that malicious attacks cannot make this application inoperable and to protect the client data on the site. Additionally, by making these changes the integrity of the data can be ensured so that users cannot fake location data. This ensures that clients can trust that any data they can see is legitimate information and can be trusted. Total costs of these revisions will cost approiximatly $700 to address. 
+
+</p>
+</body>
+</html>
+
